@@ -1,0 +1,70 @@
+/* Basics */
+
+body {
+    background-color: rgb(255, 255, 255) !important;
+    position: relative;
+
+}
+
+.header {
+    height: 100px;
+}
+
+/* Quiz-Card */
+
+.card {
+    max-height: 682px;
+    max-width: 698px;
+}
+
+.cardContainer {
+    height: calc(100vh - 100px);
+}
+
+#cardFooter {
+    height: 60px;
+}
+
+.cardAnswer {
+    box-sizing: border-box;
+    margin-bottom: 15px;
+
+}
+
+.cardAnswer:hover {
+    cursor: pointer;
+    background-color: rgb(245, 245, 245);
+
+}
+
+.card-img-top {
+    background-color: rgb(31, 80, 238);
+}
+
+.unclickable {
+    pointer-events: none;
+}
+
+/* start Screen Buttons */
+
+.startScreen{
+    height: 300px;
+    flex-wrap: wrap;
+
+}
+
+#questionCard {
+    height: 424px;
+}
+
+.startScreen button {
+    border: none;
+    background-color: unset;
+}
+
+.startScreen img {
+    width: 150px;
+}
+
+
+
