@@ -15,6 +15,7 @@ function init() {
     showStartScreen();
 };
 
+
 function showStartScreen() {
     document.getElementById('questionCard').innerHTML = /*html*/ `
      <div>
@@ -23,7 +24,6 @@ function showStartScreen() {
              <h2>Wieviele Fragen möchtest du spielen?</h2>
          </div>
      </div>
-
      <div class="card">
          <div class="startScreen px-sm-5 d-flex justify-content-between align-items-center card-body">
              <button onclick="startGame(5)">5</button>
@@ -34,28 +34,26 @@ function showStartScreen() {
     `
 };
 
+
 function startGame(x) {
     questionAmount = x;
     showQuestion();
 };
 
+
 function showQuestion() {
     currentQuestionNumber++;
 
     let questionID = Math.floor(Math.random() * (questions.length)) /* randomized ID from question from the questions array*/
-    
+
     let questionCardElement = document.getElementById('questionCard');
 
     renderProgressBar(currentQuestionNumber);
 
     // render Question Card:
     questionCardElement.innerHTML = /*html*/ `
-
         <h5 class="mb-2 card-title">${questions[questionID]['question']}</h5>
-
-        <div id="answersBlock">    
-        </div>
-
+        <div id="answersBlock"></div>
         <div id="cardFooter"
         class="cardFooter border-top d-flex justify-content-between align-items-center">
         <span>Frage&nbsp<b id="currentQuestionNumber">1</b>&nbspvon&nbsp<b id="questionAmount">15</span>
@@ -70,23 +68,25 @@ function showQuestion() {
 
 };
 
+
 function renderProgressBar(questionNumber) {
     let progressbarElement = document.getElementById('progressbar');
     let progressDecimal = (questionNumber - 1) / questionAmount;
     let progressValue = Math.ceil(progressDecimal * 100);
 
-    progressbarElement.style.width = `${ progressValue }% `;
+    progressbarElement.style.width = `${progressValue}% `;
 };
+
 
 function renderAnswers(questionID) {
     let answers = shuffleAnswers();
     let answersBlockElement = document.getElementById('answersBlock');
     let marker = ["A", "B", "C", "D"];
-    
-    for(let i = 0; i < answers.length; i++) {
+
+    for (let i = 0; i < answers.length; i++) {
 
     answersBlockElement.innerHTML += /*html*/ `
-    <div id="${answers[i]}" onclick="checkAnswer(${questionID},'${answers[i]}')" class="cardAnswer card">
+    <div id="${answers[i]}" onclick="processAnswer(${questionID},'${answers[i]}')" class="cardAnswer card">
          <div class="card-body d-flex align-items-center py-0">
               <span class="marker fs-5 border-end pe-3">${marker[i]}</span><span class="ps-3">${questions[questionID][answers[i]]}</span>
          </div>
@@ -104,19 +104,15 @@ function shuffleAnswers() {
 
         // While there remain elements to shuffle…
         while (answersKeys.length) {
-
             // Pick a remaining element…
             i = Math.floor(Math.random() * answersKeys.length);
-
             // And move it to the new array.
             answersKeysShuffled.push(answersKeys.splice(i, 1)[0]);
-
         }
 
         return answersKeysShuffled;
     }
 };
-
 
 
 function setButtonText() {
@@ -129,26 +125,17 @@ function setButtonText() {
     if (currentQuestionNumber == questionAmount) {
         document.getElementById('nextQuestionButton').innerHTML = "Auswertung";
     }
-
-
 };
 
-function checkAnswer(questionID, selection) {
+
+function processAnswer(questionID, selection) {
     let selectionNumber = selection.slice(-1);
     let correctAnswerElement = document.getElementById(`answer_${questions[questionID]['correctAnswerNumber']}`);
     let selectedAnswerElement = document.getElementById(selection);
 
     correctAnswerElement.classList.add('bg-success', 'text-light');
 
-    if (selectionNumber != questions[questionID]['correctAnswerNumber']) {
-        selectedAnswerElement.classList.add('bg-danger', 'text-light');
-        AUDIO_wrongAnswer.play();
-
-    } else {
-        correctAnswers += 1;
-        AUDIO_correctAnswer.play();
-
-    }
+    answerResponse(selectionNumber, selectedAnswerElement, questionID);
 
     document.getElementById('nextQuestionButton').disabled = false;
     makeAnswersUnclickable();
@@ -156,11 +143,26 @@ function checkAnswer(questionID, selection) {
     questions.splice(questionID, 1);
 };
 
+
+function answerResponse(answerNumber, answerElement, questionID) {
+    
+    if (answerNumber != questions[questionID]['correctAnswerNumber']) {
+        answerElement.classList.add('bg-danger', 'text-light');
+        AUDIO_wrongAnswer.play();
+    } else {
+        correctAnswers += 1;
+        AUDIO_correctAnswer.play();
+    }
+
+}
+
+
 function makeAnswersUnclickable() {
     for (let i = 1; i <= 4; i++) {
         document.getElementById(`answer_${i}`).classList.add('unclickable');
     }
 };
+
 
 function checkProgress() {
     document.getElementById('nextQuestionButton').disabled = true;
@@ -170,6 +172,7 @@ function checkProgress() {
         showEndScreen();
     }
 };
+
 
 function showEndScreen() {
     renderProgressBar(currentQuestionNumber + 1);
@@ -185,6 +188,7 @@ function showEndScreen() {
     </div >
         `
 };
+
 
 function renderEndscreenText() {
     let result = correctAnswers / questionAmount;
@@ -206,12 +210,6 @@ function renderEndscreenText() {
 
         <span>Wenn du willst versuche es doch einfach nochmal!</span>
     `
-        } else if (result > 0.5) {
-            return /*html*/ `<h2 class="mb-4"> Super!</h2 >
-        <span>Du hast ${correctAnswers} von ${questionAmount} Fragen richtig beantwortet.</span>
-    
-        <span>Wenn du willst versuche es doch einfach nochmal!</span>
-    `
         } else if (result > 0) {
             return /*html*/ `<h2 class="mb-4"> Hoppla!</h2>
         <span>Du hast nur ${correctAnswers} von ${questionAmount} Fragen richtig beantwortet.</span>
@@ -228,6 +226,7 @@ function renderEndscreenText() {
     };
 
 };
+
 
 function reset() {
     for (let i = 0; i < playedQuestions.length; i++) {
