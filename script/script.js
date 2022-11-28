@@ -19,16 +19,16 @@ function showStartScreen() {
     document.getElementById('questionCard').innerHTML = /*html*/ `
      <div>
      <div class="card">
-         <div class="d-flex justify-content-center card-body">
+         <div class="d-flex justify-content-center card-body h-100">
              <h2>Wieviele Fragen möchtest du spielen?</h2>
          </div>
      </div>
 
      <div class="card">
-         <div class="startScreen px-5 d-flex justify-content-between align-items-center card-body">
-             <button class="fw-bold" onclick="startGame(5)">5</button>
-             <button class="fw-bold" onclick="startGame(10)">10</button>
-             <button class="fw-bold" onclick="startGame(15)">15</button>
+         <div class="startScreen px-sm-5 d-flex justify-content-between align-items-center card-body">
+             <button onclick="startGame(5)">5</button>
+             <button onclick="startGame(10)">10</button>
+             <button onclick="startGame(15)">15</button>
          </div>
      </div>
     `
@@ -51,7 +51,7 @@ function showQuestion() {
     // render Question Card:
     questionCardElement.innerHTML = /*html*/ `
 
-        <h5 class="mb-3 card-title">${questions[questionID]['question']}</h5>
+        <h5 class="mb-2 card-title">${questions[questionID]['question']}</h5>
 
         <div id="answersBlock">    
         </div>
@@ -83,9 +83,9 @@ function renderAnswers(questionID) {
     let answersBlockElement = document.getElementById('answersBlock');
     let marker = ["A", "B", "C", "D"];
 
-    console.clear();
-    /* !!!!!!!!!!!!!! */ console.log(questions[questionID]["correctAnswerNumber"]);
 
+    console.log(questions[questionID][`answer_${questions[questionID]['correctAnswerNumber']}`]);
+    
     for(let i = 0; i < answers.length; i++) {
 
     answersBlockElement.innerHTML += /*html*/ `
@@ -204,32 +204,31 @@ function renderEndscreenText() {
         AUDIO_endScreen.play();
 
         if (result > 0.7) {
-            return /*html*/ `<h2 class="mb-3">Sehr gut!</h2>
+            return /*html*/ `<h2 class="mb-4">Sehr gut!</h2>
         <span>Du hast ${correctAnswers} von ${questionAmount} Fragen richtig beantwortet.</span>
 
         <span>Wenn du willst versuche es doch einfach nochmal!</span>
     `
         } else if (result > 0.5) {
-            return /*html*/ `<h2 class="mb-3"> Super!</h2 >
+            return /*html*/ `<h2 class="mb-4"> Super!</h2 >
         <span>Du hast ${correctAnswers} von ${questionAmount} Fragen richtig beantwortet.</span>
     
         <span>Wenn du willst versuche es doch einfach nochmal!</span>
     `
         } else if (result > 0) {
-            return /*html*/ `<h2 class="mb-3"> Hoppla!</h2>
+            return /*html*/ `<h2 class="mb-4"> Hoppla!</h2>
         <span>Du hast nur ${correctAnswers} von ${questionAmount} Fragen richtig beantwortet.</span>
 
         <span>Versuche es doch nochmal!</span>
     `
         } else {
-            return /*html*/ `<h2 class="mb-3"> Hoppla!</h2>
+            return /*html*/ `<h2 class="mb-4"> Hoppla!</h2>
         <span>Du hast keine Frage richtig beantwortet.</span>
 
         <span>Versuche es doch nochmal!</span>
     `
         }
     };
-
 
 };
 

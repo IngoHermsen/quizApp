@@ -3,12 +3,19 @@
 body {
     background-color: rgb(236, 235, 228) !important;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 100vh;
 
 }
 
 .header {
     height: 100px;
+}
+
+h2 {
+    font-size: 30px;
 }
 
 /* Progressbar */
@@ -24,7 +31,7 @@ b {
 }
 
 #questionCard {
-    height: 424px;
+    height: 440px;
 }
 
 .card {
@@ -32,13 +39,13 @@ b {
     max-width: 616px;
 }
 
-.cardContainer {
-    height: calc(100vh - 100px);
-}
-
 .card-body {
     height: 56px;
-    
+
+}
+
+.card-title {
+    height: 56px;
 }
 
 .marker {
@@ -69,23 +76,30 @@ b {
     pointer-events: none;
 }
 
-/* start Screen Buttons */
+/* start Screen */
 
-.startScreen{
+.startScreen {
     height: 250px;
     flex-wrap: wrap;
 
 }
 
 .startScreen button {
-   height: 120px;
-   width: 120px;
-   background-color: rgb(252, 252, 252);
-   border: 1px solid rgb(158, 154, 154);
-   border-radius: 25px;
-   font-size: 60px;
-   box-shadow: inset;
-   color: rgb(82, 81, 81);
+    height: 120px;
+    width: 120px;
+    background-color: rgb(255, 255, 255);
+    border: 5px solid rgb(243, 170, 11);
+    border-radius: 25px;
+    font-weight: 500;
+    font-size: 60px;
+    color:rgb(27, 25, 25);
+    transition: all 225ms;
+
+}
+
+.startScreen button:hover {
+    transform: scale(1.1) rotate(7deg);
+    transition: all 225ms;
 }
 
 .startScreen img {
@@ -97,7 +111,33 @@ b {
     text-align: center;
 }
 
-.endScreen > span {
+.endScreen>span {
     font-size: 25px;
     padding-bottom: 20px;
+}
+
+@media screen and (max-width: 474px) {
+    .startScreen button {
+        width: 110px;
+        height: 110px;
+        font-size: 50px;
+    }
+}
+
+@media screen and (max-width: 445px) {
+    .startScreen button {
+        width: 90px;
+        height: 90px;
+
+    }
+
+    h2 {
+        font-size: 25px;
+    }
+}
+
+@media screen and (max-height: 640px) {
+    .card {
+        max-height: 640px;
+    }
 }
