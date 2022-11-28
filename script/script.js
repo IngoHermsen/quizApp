@@ -1,48 +1,18 @@
 'use strict'
-let questionAmount = 0;
+
+let questionAmount = 2;
 let playedQuestions = [];
 let currentQuestionNumber = 0;
 let correctAnswers = 0;
 
-let questions = [
-    {
-        "question": "frage 1?",
-        "answer_1": "Antwort 1",
-        "answer_2": "Antwort 2",
-        "answer_3": "Antwort 3",
-        "answer_4": "Antwort 4",
-        "correctAnswerNumber": 4,
-    },
-    {
-        "question": "frage 2?",
-        "answer_1": "Antwort 1",
-        "answer_2": "Antwort 2",
-        "answer_3": "Antwort 3",
-        "answer_4": "Antwort 4",
-        "correctAnswerNumber": 2,
-    },
-    {
-        "question": "frage 3?",
-        "answer_1": "Antwort 1",
-        "answer_2": "Antwort 2",
-        "answer_3": "Antwort 3",
-        "answer_4": "Antwort 4",
-        "correctAnswerNumber": 2,
-    },
-    {
-        "question": "frage 4?",
-        "answer_1": "Antwort 1",
-        "answer_2": "Antwort 2",
-        "answer_3": "Antwort 3",
-        "answer_4": "Antwort 4",
-        "correctAnswerNumber": 3,
-    },
-
-];
+// Sounds
+let AUDIO_correctAnswer = new Audio('audio/rightAnswer.wav');
+let AUDIO_wrongAnswer = new Audio('audio/wrongAnswer.wav');
+let AUDIO_allAnswersRight = new Audio('audio/allAnswersRight.ogg');
+let AUDIO_endScreen = new Audio('audio/taskSuccess.mp3');
 
 function init() {
     showStartScreen();
-
 };
 
 function showStartScreen() {
@@ -55,72 +25,79 @@ function showStartScreen() {
      </div>
 
      <div class="card">
-         <div class="startScreen d-flex justify-content-center card-body">
-             <button><img onclick="startGame(3)" src="img/5q.png" alt="5-QuestionsButton"></button>
-             <button><img onclick="startGame(10)" src="img/10q.png" alt="5-QuestionsButton"></button>
-             <button><img onclick="startGame(15)" src="img/15q.png" alt="5-QuestionsButton"></button>
+         <div class="startScreen px-5 d-flex justify-content-between align-items-center card-body">
+             <button class="fw-bold" onclick="startGame(5)">5</button>
+             <button class="fw-bold" onclick="startGame(10)">10</button>
+             <button class="fw-bold" onclick="startGame(15)">15</button>
          </div>
      </div>
     `
-
-};    
-
-function startGame(x) {
-    questionAmount = x; 
-    showQuestion();
 };
 
+function startGame(x) {
+    questionAmount = x;
+    showQuestion();
+};
 
 function showQuestion() {
     currentQuestionNumber++;
 
     let questionID = Math.floor(Math.random() * (questions.length)) /* randomized ID from question from the questions array*/
-    let answers = shuffleAnswers();
+    
     let questionCardElement = document.getElementById('questionCard');
 
-    console.log(answers);
-    console.log(answers[1])
+    renderProgressBar(currentQuestionNumber);
 
-    // START html
+    // render Question Card:
     questionCardElement.innerHTML = /*html*/ `
 
-    <h5 class="mb-3 card-title">${questions[questionID]['question']}</h5>
+        <h5 class="mb-3 card-title">${questions[questionID]['question']}</h5>
 
-    <div class="answersBlock">
-        <div id="${answers[0]}" disabled onclick="checkAnswer(${questionID},'${answers[0]}')" class="cardAnswer card">
-            <div class="card-body">
-            ${questions[questionID][answers[0]]}
-            </div>
-        </div>
-        <div id="${answers[1]}" onclick="checkAnswer(${questionID},'${answers[1]}')" class="cardAnswer card">
-            <div class="card-body">
-            ${questions[questionID][answers[1]]}
-            </div>
-        </div>
-        <div id="${answers[2]}" onclick="checkAnswer(${questionID},'${answers[2]}')" class="cardAnswer card">
-            <div class="card-body">
-            ${questions[questionID][answers[2]]}
-            </div>
-        </div>
-        <div id="${answers[3]}" onclick="checkAnswer(${questionID},'${answers[3]}')" class="cardAnswer card">
-            <div class="card-body">
-            ${questions[questionID][answers[3]]}
-            </div>
+        <div id="answersBlock">    
         </div>
 
         <div id="cardFooter"
-         class="cardFooter px-3 border-top d-flex justify-content-between align-items-center">
-         <span><b id="currentQuestionNumber">1</b> von <b id="questionAmount">15</b> Fragen</b></span>
-         <button id="nextQuestionButton" onclick="checkProgress()" type="button" disabled
-         class="btn btn-primary text-light">Nächste Frage</button>
-        </div>
-    `
+        class="cardFooter border-top d-flex justify-content-between align-items-center">
+        <span>Frage&nbsp<b id="currentQuestionNumber">1</b>&nbspvon&nbsp<b id="questionAmount">15</span>
+        <button id="nextQuestionButton" onclick="checkProgress()" type="button" disabled
+        class="btn btn-primary text-light">Nächste Frage</button>
+         </div>
+         `;
 
-    renderCardFooter();
+    renderAnswers(questionID);
+    setButtonText();
     // html END
 
-}
+};
 
+function renderProgressBar(questionNumber) {
+    let progressbarElement = document.getElementById('progressbar');
+    let progressDecimal = (questionNumber - 1) / questionAmount;
+    let progressValue = Math.ceil(progressDecimal * 100);
+
+    progressbarElement.style.width = `${ progressValue }% `;
+};
+
+function renderAnswers(questionID) {
+    let answers = shuffleAnswers();
+    let answersBlockElement = document.getElementById('answersBlock');
+    let marker = ["A", "B", "C", "D"];
+
+    console.clear();
+    /* !!!!!!!!!!!!!! */ console.log(questions[questionID]["correctAnswerNumber"]);
+
+    for(let i = 0; i < answers.length; i++) {
+
+    answersBlockElement.innerHTML += /*html*/ `
+    <div id="${answers[i]}" onclick="checkAnswer(${questionID},'${answers[i]}')" class="cardAnswer card">
+         <div class="card-body d-flex align-items-center py-0">
+              <span class="marker fs-5 border-end pe-3">${marker[i]}</span><span class="ps-3">${questions[questionID][answers[i]]}</span>
+         </div>
+    </div>
+    `
+    }
+
+};
 
 function shuffleAnswers() {
     {
@@ -145,7 +122,7 @@ function shuffleAnswers() {
 
 
 
-function renderCardFooter() {
+function setButtonText() {
     let currentQuestionNumberElement = document.getElementById('currentQuestionNumber')
     let questionAmountElement = document.getElementById('questionAmount');
 
@@ -168,18 +145,18 @@ function checkAnswer(questionID, selection) {
 
     if (selectionNumber != questions[questionID]['correctAnswerNumber']) {
         selectedAnswerElement.classList.add('bg-danger', 'text-light');
+        AUDIO_wrongAnswer.play();
 
     } else {
         correctAnswers += 1;
-        console.log(correctAnswers);
+        AUDIO_correctAnswer.play();
+
     }
 
     document.getElementById('nextQuestionButton').disabled = false;
     makeAnswersUnclickable();
     playedQuestions.push(questions[questionID]);
     questions.splice(questionID, 1);
-    console.log(`gespielte Fragen: ${playedQuestions} | verbleibende Fragen: ${questions}`);
-
 };
 
 function makeAnswersUnclickable() {
@@ -195,9 +172,76 @@ function checkProgress() {
     } else {
         showEndScreen();
     }
-}
+};
 
 function showEndScreen() {
-   
-}
+    renderProgressBar(currentQuestionNumber + 1);
+
+    document.getElementById('questionCard').innerHTML = /*html*/ `
+    <div class="card">
+
+    </div>
+
+        <div class="endScreen mt-5 d-flex flex-column justify-content-center align-items-center">
+            ${renderEndscreenText()}
+        <button onclick=reset() class="btn btn-primary mt-4"> Neu starten</button>
+    </div >
+        `
+};
+
+function renderEndscreenText() {
+    let result = correctAnswers / questionAmount;
+
+    if ((correctAnswers == questionAmount)) {
+        AUDIO_allAnswersRight.play();
+
+        return /*html*/ `<h2 class="mb-3">Besser geht's nicht!</h2>
+        <span> Du hast alle ${questionAmount} Fragen richtig beantwortet!</span>
+
+            <span>Natürlich darfst du trotzdem gerne nochmal spielen ;&#041;<span></span></span>
+    `
+    } else {
+        AUDIO_endScreen.play();
+
+        if (result > 0.7) {
+            return /*html*/ `<h2 class="mb-3">Sehr gut!</h2>
+        <span>Du hast ${correctAnswers} von ${questionAmount} Fragen richtig beantwortet.</span>
+
+        <span>Wenn du willst versuche es doch einfach nochmal!</span>
+    `
+        } else if (result > 0.5) {
+            return /*html*/ `<h2 class="mb-3"> Super!</h2 >
+        <span>Du hast ${correctAnswers} von ${questionAmount} Fragen richtig beantwortet.</span>
+    
+        <span>Wenn du willst versuche es doch einfach nochmal!</span>
+    `
+        } else if (result > 0) {
+            return /*html*/ `<h2 class="mb-3"> Hoppla!</h2>
+        <span>Du hast nur ${correctAnswers} von ${questionAmount} Fragen richtig beantwortet.</span>
+
+        <span>Versuche es doch nochmal!</span>
+    `
+        } else {
+            return /*html*/ `<h2 class="mb-3"> Hoppla!</h2>
+        <span>Du hast keine Frage richtig beantwortet.</span>
+
+        <span>Versuche es doch nochmal!</span>
+    `
+        }
+    };
+
+
+};
+
+function reset() {
+    for (let i = 0; i < playedQuestions.length; i++) {
+        questions.push(playedQuestions[i]);
+    };
+
+    playedQuestions = [];
+    currentQuestionNumber = 0;
+    correctAnswers = 0;
+
+    init();
+};
 

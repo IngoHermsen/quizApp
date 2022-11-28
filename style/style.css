@@ -1,8 +1,9 @@
 /* Basics */
 
 body {
-    background-color: rgb(255, 255, 255) !important;
+    background-color: rgb(236, 235, 228) !important;
     position: relative;
+    height: 100vh;
 
 }
 
@@ -10,15 +11,42 @@ body {
     height: 100px;
 }
 
+/* Progressbar */
+
+#progressbar {
+    height: 18px !important;
+}
+
 /* Quiz-Card */
 
+b {
+    font-weight: bold;
+}
+
+#questionCard {
+    height: 424px;
+}
+
 .card {
-    max-height: 682px;
-    max-width: 698px;
+    max-height: 786px;
+    max-width: 616px;
 }
 
 .cardContainer {
     height: calc(100vh - 100px);
+}
+
+.card-body {
+    height: 56px;
+    
+}
+
+.marker {
+    font-weight: bold;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #cardFooter {
@@ -37,10 +65,6 @@ body {
 
 }
 
-.card-img-top {
-    background-color: rgb(31, 80, 238);
-}
-
 .unclickable {
     pointer-events: none;
 }
@@ -48,23 +72,32 @@ body {
 /* start Screen Buttons */
 
 .startScreen{
-    height: 300px;
+    height: 250px;
     flex-wrap: wrap;
 
 }
 
-#questionCard {
-    height: 424px;
-}
-
 .startScreen button {
-    border: none;
-    background-color: unset;
+   height: 120px;
+   width: 120px;
+   background-color: rgb(252, 252, 252);
+   border: 1px solid rgb(158, 154, 154);
+   border-radius: 25px;
+   font-size: 60px;
+   box-shadow: inset;
+   color: rgb(82, 81, 81);
 }
 
 .startScreen img {
     width: 150px;
 }
 
+/* end Screen */
+.endScreen {
+    text-align: center;
+}
 
-
+.endScreen > span {
+    font-size: 25px;
+    padding-bottom: 20px;
+}
