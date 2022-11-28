@@ -82,9 +82,6 @@ function renderAnswers(questionID) {
     let answers = shuffleAnswers();
     let answersBlockElement = document.getElementById('answersBlock');
     let marker = ["A", "B", "C", "D"];
-
-
-    console.log(questions[questionID][`answer_${questions[questionID]['correctAnswerNumber']}`]);
     
     for(let i = 0; i < answers.length; i++) {
 
